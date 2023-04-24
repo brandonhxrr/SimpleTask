@@ -5,7 +5,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.Typeface
 import androidx.compose.ui.unit.sp
 import com.brandonhxrr.simpletask.R
 
@@ -14,5 +13,14 @@ val Typography = Typography(
         fontFamily = FontFamily(Font(R.font.product_sans_regular)),
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.product_sans_regular)),
+        fontWeight = FontWeight.Normal,
+    ),
+    titleLarge = TextStyle(
+        fontFamily = FontFamily(Font(R.font.product_sans_regular)),
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp
     ),
 )
