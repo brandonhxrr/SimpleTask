@@ -32,7 +32,7 @@ class TasksScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.onPrimary
                 ) {
-                   Screen()
+                    TaskScreen()
                 }
             }
         }
@@ -41,7 +41,7 @@ class TasksScreen : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Screen() {
+fun TaskScreen() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -111,7 +111,7 @@ fun Screen() {
 @Composable
 fun TasksScreenPreview() {
     SimpleTaskTheme(false) {
-        Screen()
+        TaskScreen()
     }
 }
 
@@ -119,6 +119,6 @@ fun TasksScreenPreview() {
 @Composable
 fun TasksScreenPreviewDark() {
     SimpleTaskTheme(true) {
-        Screen()
+        TaskScreen()
     }
 }
