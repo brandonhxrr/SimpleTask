@@ -18,6 +18,9 @@ val Typography = Typography(
         fontFamily = FontFamily(Font(R.font.product_sans_regular)),
         fontWeight = FontWeight.Normal,
     ),
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.product_sans_bold))
+    ),
     titleLarge = TextStyle(
         fontFamily = FontFamily(Font(R.font.product_sans_regular)),
         fontWeight = FontWeight.Normal,
