@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,12 +57,14 @@ fun TaskScreen() {
                         ){
                             Image(painter = painterResource(id = R.drawable.tasklogo),
                                 contentDescription = "App logo",
-                                modifier = Modifier.size(30.dp).align(Alignment.CenterVertically)
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .align(Alignment.CenterVertically)
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
                                 text = stringResource(id = R.string.app_name),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.headlineMedium,
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
                         }
@@ -70,15 +73,15 @@ fun TaskScreen() {
                         modifier = Modifier.fillMaxWidth()
                     ){
                         Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                            painter = painterResource(id = R.drawable.tasklogo),
                             contentDescription = "User picture",
                             modifier = Modifier
                                 .size(30.dp)
                                 .align(Alignment.End)
-                                .padding(end = 12.dp)
                                 .clipToBounds()
                                 .clip(CircleShape)
                         )
+                        Spacer(modifier = Modifier.width(20.dp).height(20.dp))
                     }
 
 
@@ -92,13 +95,14 @@ fun TaskScreen() {
                     .fillMaxSize()
                     .padding(top = it.calculateTopPadding()),
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Bienvenido, Juan",
+                    text = "Tareas",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 32.dp),
+                    color = Color(0xFF7286D3)
                 )
             }
         }

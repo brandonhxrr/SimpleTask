@@ -61,7 +61,7 @@ fun Main(){
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .align(Alignment.CenterHorizontally),
-                color = Color(0xFF7286D3)
+                color = Color.Black
             )
         }
     }
