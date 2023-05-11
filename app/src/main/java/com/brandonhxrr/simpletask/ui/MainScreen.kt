@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,11 +24,12 @@ import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
 class MainScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             SimpleTaskTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     Main()
                 }
@@ -39,7 +41,7 @@ class MainScreen : ComponentActivity() {
 @Composable
 fun Main(){
     Row( modifier = Modifier.fillMaxSize()
-        .background(MaterialTheme.colorScheme.onPrimary)){
+        .background(MaterialTheme.colorScheme.background)){
         Column(
             modifier = Modifier.fillMaxWidth()
                 .align(Alignment.CenterVertically)
@@ -59,7 +61,7 @@ fun Main(){
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .align(Alignment.CenterHorizontally),
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFF7286D3)
             )
         }
     }
