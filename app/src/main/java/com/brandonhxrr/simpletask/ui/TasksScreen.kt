@@ -1,22 +1,17 @@
 package com.brandonhxrr.simpletask.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,11 +38,10 @@ class TasksScreen : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen() {
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Column(
                         modifier = Modifier.fillMaxWidth()
@@ -69,27 +63,19 @@ fun TaskScreen() {
                             )
                         }
                     }
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        Image(
-                            painter = painterResource(id = R.drawable.tasklogo),
-                            contentDescription = "User picture",
-                            modifier = Modifier
-                                .size(30.dp)
-                                .align(Alignment.End)
-                                .clipToBounds()
-                                .clip(CircleShape)
-                        )
-                        Spacer(modifier = Modifier.width(20.dp).height(20.dp))
-                    }
-
-
                 },
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                }
             )
         },
         content = {
-            
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -108,6 +94,7 @@ fun TaskScreen() {
         }
     )
 }
+
 
 
 
