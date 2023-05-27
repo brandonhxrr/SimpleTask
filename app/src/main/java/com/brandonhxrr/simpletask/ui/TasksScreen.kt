@@ -3,8 +3,16 @@ package com.brandonhxrr.simpletask.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
@@ -16,13 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brandonhxrr.simpletask.R
+import com.brandonhxrr.simpletask.data.Task
 import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
 
 class TasksScreen : ComponentActivity() {
@@ -41,7 +49,7 @@ class TasksScreen : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun TaskScreen() {
     Scaffold(
@@ -116,7 +124,53 @@ fun TaskScreen() {
                         unselectedContentColor = MaterialTheme.colorScheme.onBackground
                     )
                 }
+                AnimatedContent(
+                    targetState = state,
+                    transitionSpec = {
+                    slideInHorizontally(
+                        initialOffsetX = { -it },
+                        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+                    ) with slideOutHorizontally(
+                        targetOffsetX = { -it },
+                        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+                    )
+                }) {
+                    tab ->
+                    when(tab) {
+                        0 -> tabContent(tabNumber = 0)
+                    }
+                }
             }
+        }
+    )
+}
+
+
+@Composable
+fun tabContent(tabNumber: Number){
+    LazyColumn {
+        item {
+            taskElement(task = Task(true, "Hola mundo"))
+            taskElement(task = Task(true, "Hola mundo"))
+            taskElement(task = Task(true, "Hola mundo"))
+        }
+    }
+}
+
+@Composable
+fun taskElement(task: Task){
+    Card(
+       modifier = Modifier
+           .padding(5.dp)
+           .fillMaxWidth(),
+        content = {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Checkbox(checked = task.done, onCheckedChange = {task.done = !task.done}, modifier = Modifier.align(Alignment.CenterVertically))
+                Text(text = task.name, modifier = Modifier.align(Alignment.CenterVertically))
+            }
+            
         }
     )
 }
