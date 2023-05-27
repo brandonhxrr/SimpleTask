@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brandonhxrr.simpletask.R
 import com.brandonhxrr.simpletask.data.Task
+import com.brandonhxrr.simpletask.data.TaskData
 import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
 
 class TasksScreen : ComponentActivity() {
@@ -52,6 +53,8 @@ class TasksScreen : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun TaskScreen() {
+    val data : TaskData = TaskData()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -89,27 +92,27 @@ fun TaskScreen() {
                 }
             )
         },
-        content = {
+        content = { padding ->
             var state by remember { mutableStateOf(0) }
-            val titles = listOf("Tab 1", "Tab 2", "Tab 3 with lots of text")
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = it.calculateTopPadding()),
+                    .padding(top = padding.calculateTopPadding()),
             ) {
                 ScrollableTabRow(selectedTabIndex = state, edgePadding = 0.dp) {
-                    titles.forEachIndexed { index, title ->
+                    data.lists.forEachIndexed { index, taskList ->
                         Tab(
                             selected = state == index,
                             onClick = { state = index },
-                            text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                            text = { Text(text = taskList.tabName, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                             selectedContentColor = MaterialTheme.colorScheme.primary,
                             unselectedContentColor = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     Tab(
-                        selected = state == titles.size,
-                        onClick = {state = titles.size},
+                        selected = state == data.lists.size,
+                        onClick = {state = data.lists.size},
                         text = {
                             Row{
                                 Icon(
@@ -117,7 +120,7 @@ fun TaskScreen() {
                                 contentDescription = "Localized description"
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(text = "Nueva tarea", modifier = Modifier.align(Alignment.CenterVertically))
+                                Text(text = "Nueva lista", modifier = Modifier.align(Alignment.CenterVertically))
                             }
                                },
                         selectedContentColor = MaterialTheme.colorScheme.primary,
@@ -135,10 +138,7 @@ fun TaskScreen() {
                         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
                     )
                 }) {
-                    tab ->
-                    when(tab) {
-                        0 -> tabContent(tabNumber = 0)
-                    }
+                    tab -> TabContent(data.lists[tab].tasks)
                 }
             }
         }
@@ -147,18 +147,16 @@ fun TaskScreen() {
 
 
 @Composable
-fun tabContent(tabNumber: Number){
+fun TabContent(tabItems: List<Task>){
     LazyColumn {
-        item {
-            taskElement(task = Task(true, "Hola mundo"))
-            taskElement(task = Task(true, "Hola mundo"))
-            taskElement(task = Task(true, "Hola mundo"))
+        items(tabItems.size){taskNumber ->
+            TaskElement(task = tabItems[taskNumber])
         }
     }
 }
 
 @Composable
-fun taskElement(task: Task){
+fun TaskElement(task: Task){
     Card(
        modifier = Modifier
            .padding(5.dp)
