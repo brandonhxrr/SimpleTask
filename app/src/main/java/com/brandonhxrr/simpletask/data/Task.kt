@@ -2,5 +2,6 @@ package com.brandonhxrr.simpletask.data
 
 data class Task(
     var done: Boolean,
-    val name: String
+    val name: String,
+    val group: String
 )

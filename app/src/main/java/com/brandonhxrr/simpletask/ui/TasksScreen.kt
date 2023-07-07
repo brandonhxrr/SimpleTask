@@ -18,10 +18,9 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,9 +28,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brandonhxrr.simpletask.R
 import com.brandonhxrr.simpletask.data.Task
-import com.brandonhxrr.simpletask.data.TaskData
 import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
 
 class TasksScreen : ComponentActivity() {
@@ -52,8 +51,13 @@ class TasksScreen : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun TaskScreen() {
-    val data : TaskData = TaskData()
+fun TaskScreen(
+    taskViewModel: TaskViewModel = viewModel()
+) {
+    //val data = TaskData()
+    val taskUiState by taskViewModel.uiState.collectAsState()
+
+    println("SIXEEE: " + taskUiState.taskList.size)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -93,26 +97,26 @@ fun TaskScreen() {
             )
         },
         content = { padding ->
-            var state by remember { mutableStateOf(0) }
+            //var state by remember { mutableStateOf(0) }
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = padding.calculateTopPadding()),
             ) {
-                ScrollableTabRow(selectedTabIndex = state, edgePadding = 0.dp) {
-                    data.lists.forEachIndexed { index, taskList ->
+                ScrollableTabRow(selectedTabIndex = taskUiState.selectedTab, edgePadding = 0.dp, modifier = Modifier.fillMaxWidth()) {
+                    taskUiState.taskList.forEachIndexed { index, taskList ->
                         Tab(
-                            selected = state == index,
-                            onClick = { state = index },
+                            selected = taskUiState.selectedTab == index,
+                            onClick = { taskViewModel.onTabClicked(index) },
                             text = { Text(text = taskList.tabName, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                             selectedContentColor = MaterialTheme.colorScheme.primary,
                             unselectedContentColor = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     Tab(
-                        selected = state == data.lists.size,
-                        onClick = {state = data.lists.size},
+                        selected = taskUiState.selectedTab == taskUiState.taskList.size,
+                        onClick = {taskViewModel.onTabClicked(taskUiState.taskList.size) },
                         text = {
                             Row{
                                 Icon(
@@ -128,7 +132,7 @@ fun TaskScreen() {
                     )
                 }
                 AnimatedContent(
-                    targetState = state,
+                    targetState = taskUiState.selectedTab,
                     transitionSpec = {
                     slideInHorizontally(
                         initialOffsetX = { -it },
@@ -137,8 +141,10 @@ fun TaskScreen() {
                         targetOffsetX = { -it },
                         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
                     )
-                }) {
-                    tab -> TabContent(data.lists[tab].tasks)
+                }) {tab ->
+                    println("Selected tab: $tab")
+                    println("Task list size: ${taskUiState.taskList.size}")
+                    TabContent(taskUiState.taskList[tab].tasks)
                 }
             }
         }
@@ -172,9 +178,6 @@ fun TaskElement(task: Task){
         }
     )
 }
-
-
-
 
 @Preview(showBackground = true)
 @Composable
