@@ -30,7 +30,7 @@ class TaskViewModel : ViewModel() {
         _uiState.value = updatedUiState
     }
 
-    fun loadData() {
+    private fun loadData() {
         val tasks = listOf(
             Task(false, "Tarea 1 de la tab 1", "Tab 1"),
             Task(false, "Tarea 2 de la tab 1", "Tab 1"),

@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -97,8 +99,6 @@ fun TaskScreen(
             )
         },
         content = { padding ->
-            //var state by remember { mutableStateOf(0) }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -163,6 +163,12 @@ fun TabContent(tabItems: List<Task>){
 
 @Composable
 fun TaskElement(task: Task){
+    val isChecked = remember { mutableStateOf(task.done) }
+
+    LaunchedEffect(isChecked.value) {
+        task.done = isChecked.value
+    }
+
     Card(
        modifier = Modifier
            .padding(5.dp)
@@ -171,7 +177,11 @@ fun TaskElement(task: Task){
             Row(
                 modifier = Modifier.fillMaxWidth()
             ){
-                Checkbox(checked = task.done, onCheckedChange = {task.done = !task.done}, modifier = Modifier.align(Alignment.CenterVertically))
+                Checkbox(
+                    checked = isChecked.value,
+                    onCheckedChange = { isChecked.value = !isChecked.value },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
                 Text(text = task.name, modifier = Modifier.align(Alignment.CenterVertically))
             }
             
