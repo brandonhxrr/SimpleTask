@@ -11,36 +11,35 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.with
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brandonhxrr.simpletask.R
 import com.brandonhxrr.simpletask.data.Task
 import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
+import androidx.compose.material3.*
+import androidx.compose.runtime.saveable.rememberSaveable
 
 class TasksScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,6 +105,7 @@ fun TaskScreen(
             )
         },
         content = { padding ->
+            var text by rememberSaveable { mutableStateOf("") }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -115,6 +115,49 @@ fun TaskScreen(
                     .fillMaxWidth()
                     .shadow(2.dp),
                 divider = { Divider(color = MaterialTheme.colorScheme.background)}) {
+
+                    var showDialog by remember { mutableStateOf(false) }
+
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                showDialog = false
+                            },
+                            icon = {
+                                Icon(Icons.Rounded.List, null)
+                            },
+                            title = {
+                                Text(text = "Nueva lista")
+                            },
+                            text = {
+                                OutlinedTextField(
+                                    value = text,
+                                    onValueChange = { text = it },
+                                    label = { Text("Título de la lista") }
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDialog = false
+                                    }
+                                ) {
+                                    Text("Hecho")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDialog = false
+                                    }
+                                ) {
+                                    Text("Cancelar")
+                                }
+                            }
+                        )
+                    }
+
+
                     taskUiState.taskList.forEachIndexed { index, taskList ->
                         Tab(
                             selected = taskUiState.selectedTab == index,
@@ -126,7 +169,7 @@ fun TaskScreen(
                     }
                     Tab(
                         selected = taskUiState.selectedTab == taskUiState.taskList.size,
-                        onClick = {taskViewModel.onTabClicked(taskUiState.taskList.size) },
+                        onClick = { showDialog = true},
                         text = {
                             Row{
                                 Icon(
