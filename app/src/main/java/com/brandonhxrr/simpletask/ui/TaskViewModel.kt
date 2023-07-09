@@ -31,24 +31,27 @@ class TaskViewModel : ViewModel() {
     }
 
     private fun loadData() {
-        val tasks = listOf(
-            Task(false, "Tarea 1 de la tab 1", "Tab 1"),
-            Task(false, "Tarea 2 de la tab 1", "Tab 1"),
-            Task(false, "Tarea 1 de la tab 2", "Tab 2"),
-            Task(false, "Tarea 2 de la tab 2", "Tab 2"),
-            Task(false, "Tarea 3 de la tab 2", "Tab 2")
+        val lists : List<TaskList> = listOf(
+            TaskList(
+                tabName = "Tab1",
+                tasks = listOf(
+                    Task(false, "Tarea 1 de la tab 1"),
+                    Task(false, "Tarea 2 de la tab 1"),
+                )
+            ),
+            TaskList(
+                tabName = "Tab2",
+                tasks = listOf(
+                    Task(false, "Tarea 1 de la tab 2"),
+                    Task(false, "Tarea 2 de la tab 2"),
+                    Task(false, "Tarea 3 de la tab 2")
+                )
+            )
         )
 
         selectedTab = 0
 
-        taskList = generateTaskGroups(tasks)
+        taskList = lists
         updateUiState()
-    }
-
-    private fun generateTaskGroups(tasks: List<Task>): List<TaskList> {
-        val taskGroups = tasks.groupBy { it.group }
-        return taskGroups.map { (tabName, taskList) ->
-            TaskList(tabName, taskList)
-        }
     }
 }
