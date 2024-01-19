@@ -21,8 +21,6 @@ import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setContent {
             SimpleTaskTheme {
                 Surface(

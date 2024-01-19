@@ -11,20 +11,43 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.with
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.List
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,9 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brandonhxrr.simpletask.R
 import com.brandonhxrr.simpletask.data.Task
+import com.brandonhxrr.simpletask.data.TaskList
 import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
-import androidx.compose.material3.*
-import androidx.compose.runtime.saveable.rememberSaveable
 
 class TasksScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,11 +96,12 @@ fun TaskScreen(
                 title = {
                     Column(
                         modifier = Modifier.fillMaxWidth()
-                    ){
+                    ) {
                         Row(
                             modifier = Modifier.align(Alignment.CenterHorizontally)
-                        ){
-                            Image(painter = painterResource(id = R.drawable.tasklogo),
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.tasklogo),
                                 contentDescription = "App logo",
                                 modifier = Modifier
                                     .size(30.dp)
@@ -111,10 +134,12 @@ fun TaskScreen(
                     .fillMaxSize()
                     .padding(top = padding.calculateTopPadding()),
             ) {
-                ScrollableTabRow(selectedTabIndex = taskUiState.selectedTab, edgePadding = 0.dp, modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(2.dp),
-                divider = { Divider(color = MaterialTheme.colorScheme.background)}) {
+                ScrollableTabRow(selectedTabIndex = taskUiState.selectedTab,
+                    edgePadding = 0.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(2.dp),
+                    divider = { Divider(color = MaterialTheme.colorScheme.background) }) {
 
                     var showDialog by remember { mutableStateOf(false) }
 
@@ -140,6 +165,7 @@ fun TaskScreen(
                                 TextButton(
                                     onClick = {
                                         showDialog = false
+                                        taskUiState.taskList.plus(TaskList(text, listOf()))
                                     }
                                 ) {
                                     Text("Hecho")
@@ -162,24 +188,33 @@ fun TaskScreen(
                         Tab(
                             selected = taskUiState.selectedTab == index,
                             onClick = { taskViewModel.onTabClicked(index) },
-                            text = { Text(text = taskList.tabName, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                            text = {
+                                Text(
+                                    text = taskList.tabName,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            },
                             selectedContentColor = MaterialTheme.colorScheme.primary,
                             unselectedContentColor = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     Tab(
                         selected = taskUiState.selectedTab == taskUiState.taskList.size,
-                        onClick = { showDialog = true},
+                        onClick = { showDialog = true },
                         text = {
-                            Row{
+                            Row {
                                 Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "Localized description"
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Localized description"
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(text = "Nueva lista", modifier = Modifier.align(Alignment.CenterVertically))
+                                Text(
+                                    text = "Nueva lista",
+                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                )
                             }
-                               },
+                        },
                         selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = MaterialTheme.colorScheme.onBackground
                     )
@@ -188,15 +223,22 @@ fun TaskScreen(
                 AnimatedContent(
                     targetState = taskUiState.selectedTab,
                     transitionSpec = {
-                    slideInHorizontally(
-                        initialOffsetX = { -it },
-                        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-                    ) with slideOutHorizontally(
-                        targetOffsetX = { -it },
-                        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-                    )
-                }) {
-                        tab -> TabContent(taskUiState.taskList[tab].tasks)
+                        slideInHorizontally(
+                            initialOffsetX = { -it },
+                            animationSpec = tween(
+                                durationMillis = 500,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) with slideOutHorizontally(
+                            targetOffsetX = { -it },
+                            animationSpec = tween(
+                                durationMillis = 500,
+                                easing = FastOutSlowInEasing
+                            )
+                        )
+                    }, label = ""
+                ) { tab ->
+                    TabContent(taskUiState.taskList[tab].tasks)
                 }
             }
         }
@@ -204,16 +246,16 @@ fun TaskScreen(
 }
 
 @Composable
-fun TabContent(tabItems: List<Task>){
+fun TabContent(tabItems: List<Task>) {
     LazyColumn {
-        items(tabItems.size){taskNumber ->
+        items(tabItems.size) { taskNumber ->
             TaskElement(task = tabItems[taskNumber])
         }
     }
 }
 
 @Composable
-fun TaskElement(task: Task){
+fun TaskElement(task: Task) {
     val isChecked = remember { mutableStateOf(task.done) }
 
     LaunchedEffect(isChecked.value) {
@@ -221,13 +263,13 @@ fun TaskElement(task: Task){
     }
 
     Card(
-       modifier = Modifier
-           .padding(5.dp)
-           .fillMaxWidth(),
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxWidth(),
         content = {
             Row(
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
                 Checkbox(
                     checked = isChecked.value,
                     onCheckedChange = { isChecked.value = !isChecked.value },
@@ -235,7 +277,7 @@ fun TaskElement(task: Task){
                 )
                 Text(text = task.name, modifier = Modifier.align(Alignment.CenterVertically))
             }
-            
+
         }
     )
 }
