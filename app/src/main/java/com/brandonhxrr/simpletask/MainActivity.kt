@@ -17,7 +17,9 @@ import com.brandonhxrr.simpletask.ui.Main
 import com.brandonhxrr.simpletask.ui.Screens
 import com.brandonhxrr.simpletask.ui.TaskScreen
 import com.brandonhxrr.simpletask.ui.theme.SimpleTaskTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
